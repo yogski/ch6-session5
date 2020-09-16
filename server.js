@@ -26,7 +26,7 @@ app.post('/articles', (req, res) => {
             title: req.body.title,
             body: req.body.body
         }).then(article => {
-            res.send('Article berhasil dibuat')
+            res.render('articles/success',{id: article.id})
         })
     } catch (error) {
         res.status(500).json({"message": error})
@@ -42,13 +42,20 @@ app.get('/home', (req, res) => {
     res.render('home') // lokasi file yang mau di render, dari folder views
 })
 
-app.get('/players', (req, res) => {
+app.get('/players', async (req, res) => {
     pool.query('SELECT * FROM players ORDER BY id ASC', (error, results) => {
         if (error) {
           res.status(500).json(error)
         }
         res.render('players/all', {data: results})
     })
+})
+
+// TUGAS
+// get players under level X
+// '/players/under/:6' --> player with level 6 or lower
+app.get('/players/under/:lvl', (req, res) => {
+    // YOUR CODE
 })
 
 app.listen(PORT, () => {
