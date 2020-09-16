@@ -2,6 +2,16 @@ const express = require('express')
 const app = express()
 const PORT = 8000
 
+// connect to DB
+const Pool = require('pg').Pool
+const pool = new Pool({
+  user: 'postgres', // your db user
+  host: 'localhost',
+  database: 'chapter6', // your db name
+  password: 'qwertyuiop', // your db password
+  port: 5432,
+})
+
 // View Engine
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
@@ -30,6 +40,15 @@ app.get('/articles/create', (req, res) => {
 
 app.get('/home', (req, res) => {
     res.render('home') // lokasi file yang mau di render, dari folder views
+})
+
+app.get('/players', (req, res) => {
+    pool.query('SELECT * FROM players ORDER BY id ASC', (error, results) => {
+        if (error) {
+          res.status(500).json(error)
+        }
+        res.render('players/all', {data: results})
+    })
 })
 
 app.listen(PORT, () => {
